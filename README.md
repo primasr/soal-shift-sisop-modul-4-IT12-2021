@@ -377,7 +377,7 @@ INFO::28052021-10:00:00:CREATE::/test.txt
 INFO::28052021-10:01:00:RENAME::/test.txt::/rename.txt
 
 ## Penyelesaian
-## Code
+## Code :
 ```sh
 // Fungsi untuk membuat log
 void createlog(const char process[100], const char fpath[1000]) {
