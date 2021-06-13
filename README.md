@@ -318,6 +318,39 @@ int main(int argc, char *argv[]) {
 }
 ```
 
+## Penjelasan Code
+
+1) Pertama-tama kami membuat fungsi atbash untuk mengenkripsi direktori yang memiliki awalan AtoZ_. Metode atbash merupakan suatu teknik enkripsi, dimana huruf alphabet disubtitusi dengan kebalikan dari abjadnya. Sehingga jika nanti terdapat direktori dengan nama AtoZ_ maka isi dari direktori itu akan terenkripsi.
+
+```
+void atbash(char *name) {
+    if (strcmp(name, ".") == 0 || strcmp(name, "..") == 0) return;
+
+    char *dot = strrchr(name, '.');
+    char *atoz = strstr(name, "AtoZ_");
+    int i;
+    for (i = atoz - name; i < strlen(name); ++i) {
+        if (name[i] == '/') {
+            break;
+        }
+    }
+
+    if (atoz == NULL) {
+        i = 0;
+    }
+
+    int last = dot ? dot - name: strlen(name);
+    for (; i < last; ++i) {
+        if ('A' <= name[i] && name[i] <= 'Z') {
+            name[i] = 155 - name[i];
+        } else if ('a' <= name[i] && name[i] <= 'z') {
+            name[i] = 219 - name[i];
+        }
+    }
+}
+```
+
+
 ## Soal 2
 
 Selain itu Sei mengusulkan untuk membuat metode enkripsi tambahan agar data pada komputer mereka semakin aman. Berikut rancangan metode enkripsi tambahan yang dirancang oleh Sei
