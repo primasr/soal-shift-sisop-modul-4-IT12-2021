@@ -323,6 +323,7 @@ int main(int argc, char *argv[]) {
 1) Pertama-tama kami membuat fungsi atbash untuk mengenkripsi direktori yang memiliki awalan AtoZ_. Metode atbash merupakan suatu teknik enkripsi, dimana huruf alphabet disubtitusi dengan kebalikan dari abjadnya. Sehingga jika nanti terdapat direktori dengan nama AtoZ_ maka isi dari direktori itu akan terenkripsi.
 
 ```
+
 void atbash(char *name) {
     if (strcmp(name, ".") == 0 || strcmp(name, "..") == 0) return;
 
@@ -348,7 +349,26 @@ void atbash(char *name) {
         }
     }
 }
+
 ```
+
+2) Kemudian kami buat fungsi cek enkripsi untuk mengecek apakah direktori yang diinputkan terdapat nama AtoZ_ atau RX_. Jika terdapat nama RX_ maka fungsi enkripsi rot13 dan atbash akan diterapkan pada direktori tersebut namun jika terdapat nama AtoZ_ maka fungsi enkripsi atbash akan diterapkan pada direktori tersebut.
+
+```
+
+void check_encryption(char *path, const char *fpath) {
+    printf("check %s %s\n", path, fpath);
+    if (strstr(fpath, "/AtoZ_") != NULL) {
+        atbash(path);
+    } else if (strstr(fpath, "/RX_") != NULL) {
+        atbash(path);
+        rot13(path);
+    }
+    printf("enc %s\n", path);
+}
+
+```
+
 
 
 ## Soal 2
