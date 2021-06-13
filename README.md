@@ -513,6 +513,24 @@ static int xmp_mkdir(const char *path, mode_t mode) {
 
 ```
 
+7) Terdapat fungsi rmdir untuk menghapus direktori, kemudian aktifitas ini dicatat dalam log dengan fungsi createlog
+
+```
+
+static int xmp_rmdir(const char *path) {
+    printf("rmdir %s\n", path);
+    createlog("rmdir", path);
+    char fpath[2000];
+
+    sprintf(fpath, "%s/%s", dirpath, path);
+    int res = rmdir(fpath);
+    if (res != 0) return -errno;
+
+    return 0;
+}
+
+```
+
 
 ## Soal 2
 
