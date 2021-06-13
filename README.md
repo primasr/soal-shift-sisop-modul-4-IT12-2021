@@ -87,4 +87,28 @@ Level : Level logging, dd : 2 digit tanggal, mm : 2 digit bulan, yyyy : 4 digit 
 INFO::28052021-10:00:00:CREATE::/test.txt
 INFO::28052021-10:01:00:RENAME::/test.txt::/rename.txt
 
+## Dokumentasi
 
+Compfile file FUSE kita menggunakan command dibawah
+
+![compile](https://user-images.githubusercontent.com/73151849/121808986-34979c80-cc85-11eb-85ac-cb15ccec482d.png)
+
+Tampilan setelah kita melakukan mount FUSE
+
+![mount](https://user-images.githubusercontent.com/73151849/121808995-3c574100-cc85-11eb-8386-f57743e2c2e5.png)
+
+Kita coba membuat sebuah folder
+
+![mkdir_atoz](https://user-images.githubusercontent.com/73151849/121809003-3feac800-cc85-11eb-966b-21340c812e52.png)
+
+Kita coba me-rename sebuah folder
+
+![rename_atoz](https://user-images.githubusercontent.com/73151849/121809000-3f523180-cc85-11eb-8422-92a439acd24d.png)
+
+Setelah selesai semua, kita bisa melakukan unmount dengan command dibawah
+
+![unmonut](https://user-images.githubusercontent.com/73151849/121808999-3f523180-cc85-11eb-8f39-6c435c5b1a5e.png)
+
+Tampilan logfile
+
+![logfile](https://user-images.githubusercontent.com/73151849/121808998-3e210480-cc85-11eb-953c-b5ffa84fd17b.png)
