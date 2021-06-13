@@ -552,6 +552,92 @@ Suatu_File.txt.0002
 ```
 Ketika diakses melalui filesystem hanya akan muncul Suatu_File.txt
 
+## Code
+
+```
+
+void rot13(char *name) {
+    if (strcmp(name, ".") == 0 || strcmp(name, "..") == 0) return;
+
+    int name_len = strlen(name);
+    for (int i = 0; i < name_len; ++i) {
+        if ('A' <= name[i] && name[i] <= 'M') {
+            name[i] = 13 + name[i];
+        } else if ('N' <= name[i] && name[i] <= 'Z') {
+            name[i] = -13 + name[i];
+        } else if ('a' <= name[i] && name[i] <= 'm') {
+            name[i] = 13 + name[i];
+        } else if ('n' <= name[i] && name[i] <= 'z') {
+            name[i] = -13 + name[i];
+        }
+    }
+
+    char *dot = strrchr(name, '.');
+    for (int i = (int)(dot - name); i < name_len; ++i) {
+        if ('A' <= name[i] && name[i] <= 'M') {
+            name[i] = 13 + name[i];
+        } else if ('N' <= name[i] && name[i] <= 'Z') {
+            name[i] = -13 + name[i];
+        } else if ('a' <= name[i] && name[i] <= 'm') {
+            name[i] = 13 + name[i];
+        } else if ('n' <= name[i] && name[i] <= 'z') {
+            name[i] = -13 + name[i];
+        }
+    }
+}
+
+void vigenere_enc(char *name) {
+    char *key = "SISOP";
+
+    if (strcmp(name, ".") == 0 || strcmp(name, "..") == 0) return;
+
+    int n = 0;
+
+    char *dot = strrchr(name, '.');
+    for (int i = 0; i < (int)(dot - name); ++i) {
+        if ('A' <= name[i] && name[i] <= 'Z') {
+            name[i] = 65 + (name[i] + key[n] - 130) % 26;
+            n = (n + 1) % 5;
+        } else if ('a' <= name[i] && name[i] <= 'z') {
+            name[i] = 97 + (name[i] + key[n] - 162) % 26;
+            n = (n + 1) % 5;
+        }
+    }
+}
+
+void vigenere_dec(char *name) {
+    char *key = "SISOP";
+
+    if (strcmp(name, ".") == 0 || strcmp(name, "..") == 0) return;
+
+    int n = 0;
+
+    char *dot = strrchr(name, '.');
+    for (int i = 0; i < (int)(dot - name); ++i) {
+        if ('A' <= name[i] && name[i] <= 'Z') {
+            name[i] = 65 + (name[i] - key[n] + 26) % 26;
+            n = (n + 1) % 5;
+        } else if ('a' <= name[i] && name[i] <= 'z') {
+            name[i] = 97 + (name[i] - key[n] - 6) % 26;
+            n = (n + 1) % 5;
+        }
+    }
+
+}
+
+void check_encryption(char *path, const char *fpath) {
+    printf("check %s %s\n", path, fpath);
+    if (strstr(fpath, "/AtoZ_") != NULL) {
+        atbash(path);
+    } else if (strstr(fpath, "/RX_") != NULL) {
+        atbash(path);
+        rot13(path);
+    }
+    printf("enc %s\n", path);
+}
+
+```
+
 ## Soal 3
 
 Karena Sin masih super duper gabut akhirnya dia menambahkan sebuah fitur lagi pada filesystem mereka. 
