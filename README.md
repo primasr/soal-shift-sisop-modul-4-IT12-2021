@@ -376,6 +376,47 @@ Level : Level logging, dd : 2 digit tanggal, mm : 2 digit bulan, yyyy : 4 digit 
 INFO::28052021-10:00:00:CREATE::/test.txt
 INFO::28052021-10:01:00:RENAME::/test.txt::/rename.txt
 
+## Penyelesaian
+## Code
+```sh
+// Fungsi untuk membuat log
+void createlog(const char process[100], const char fpath[1000]) {
+    char text[2000];
+    FILE *fp = fopen("/home/primasr/SinSeiFS.log","a");
+    time_t t = time(NULL);
+    struct tm tm = *localtime(&t);
+    
+    if (strcmp(process, "unlink") == 0) {
+        sprintf(text, "WARNING::%02d%02d%04d-%02d:%02d:%02d::UNLINK::%s\n", tm.tm_mday, tm.tm_mon + 1, tm.tm_year + 1900, tm.tm_hour, tm.tm_min, tm.tm_sec, fpath);
+    }
+    else if (strcmp(process, "mkdir") == 0) {
+        sprintf(text, "INFO::%02d%02d%04d-%02d:%02d:%02d::MKDIR::%s\n", tm.tm_mday, tm.tm_mon + 1, tm.tm_year + 1900, tm.tm_hour, tm.tm_min, tm.tm_sec, fpath);
+    }
+    else if (strcmp(process, "rmdir") == 0) {
+        sprintf(text, "WARNING::%02d%02d%04d-%02d:%02d:%02d::RMDIR::%s\n", tm.tm_mday, tm.tm_mon + 1, tm.tm_year + 1900, tm.tm_hour, tm.tm_min, tm.tm_sec, fpath);
+    }
+    for (int i = 0; text[i] != '\0'; i++) {
+            fputc(text[i], fp);
+    }
+    fclose (fp);
+}
+
+// Fungsi untuk membuat log khusus proses rename
+void createlogrename(const char from[1000], const char to[1000]) {
+    FILE *fp = fopen("/home/primasr/SinSeiFS.log", "a");
+    time_t t = time(NULL);
+    struct tm tm = *localtime(&t);
+    char text[2000];
+
+    sprintf(text, "INFO::%02d%02d%04d-%02d:%02d:%02d::RENAME::%s::%s\n", tm.tm_mday, tm.tm_mon + 1, tm.tm_year + 1900, tm.tm_hour, tm.tm_min, tm.tm_sec, from, to);
+    for (int i = 0; text[i] != '\0'; i++) {
+            fputc(text[i], fp);
+    }
+    fclose(fp);
+}
+
+```
+
 ## Dokumentasi
 
 Compfile file FUSE kita menggunakan command dibawah
