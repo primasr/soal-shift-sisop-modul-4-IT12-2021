@@ -29,8 +29,8 @@ d) Setiap pembuatan direktori ter-encode (mkdir atau rename) akan tercatat ke se
 
 e) Metode encode pada suatu direktori juga berlaku terhadap direktori yang ada di dalamnya.(rekursif)
 
-## penyelesaian 
-## code :
+## Penyelesaian 
+## Code :
 ```sh
 void atbash(char *name) {
     if (strcmp(name, ".") == 0 || strcmp(name, "..") == 0) return;
@@ -322,7 +322,7 @@ int main(int argc, char *argv[]) {
 
 1) Pertama-tama kami membuat fungsi atbash untuk mengenkripsi direktori yang memiliki awalan AtoZ_. Metode atbash merupakan suatu teknik enkripsi, dimana huruf alphabet disubtitusi dengan kebalikan dari abjadnya. Sehingga jika nanti terdapat direktori dengan nama AtoZ_ maka isi dari direktori itu akan terenkripsi.
 
-```
+```sh
 
 void atbash(char *name) {
     if (strcmp(name, ".") == 0 || strcmp(name, "..") == 0) return;
@@ -356,7 +356,7 @@ void atbash(char *name) {
 - Jika terdapat nama AtoZ_ maka fungsi enkripsi atbash akan diterapkan pada direktori tersebut.
 - Jika terdapat nama RX_ maka fungsi enkripsi rot13 dan atbash akan diterapkan pada direktori tersebut namun 
 
-```
+```sh
 
 void check_encryption(char *path, const char *fpath) {
     printf("check %s %s\n", path, fpath);
@@ -373,7 +373,7 @@ void check_encryption(char *path, const char *fpath) {
 
 3) Selain itu kami juga membuat fungsi getatt tujuannya untuk  menambahkan fungsi cek enkripsi serta mendapatkan atribut dari file yang diminta
 
-```
+```sh
 
 static int xmp_getattr(const char *path, struct stat *st) {
     char fpath[2000], name[1000], temp[1000];
@@ -403,7 +403,7 @@ static int xmp_getattr(const char *path, struct stat *st) {
 
 4) Selanjutnya terdapat fungsi readdir untuk membaca direktori yang diminta selain itu juga menambahkan fungsi cek enkripsi yang didefinisikan sebelumnya untuk mengecek nama direktori yang akan dienkripsi.
 
-```
+```sh
 
 static int xmp_readdir(const char *path, void *buf, fuse_fill_dir_t filler, off_t offset, struct fuse_file_info *fi) {
     int res;
@@ -462,7 +462,7 @@ static int xmp_readdir(const char *path, void *buf, fuse_fill_dir_t filler, off_
 
 5) Lalu kami membuat fungsi rename untuk merename folder sebelumnya menjadi nama folder yang diinginkan, menambahkan fungsi cek enkripsi yang didefinisikan sebelumnya untuk mengecek nama direktori yang akan dienkripsi dan nantinya fungsi ini akan menambahkan fungsi createlogrename untuk dicatat dalam log.
 
-```
+```sh
 
 static int xmp_rename(const char *old, const char *new) {
     char fpath[2000];
@@ -498,7 +498,7 @@ static int xmp_rename(const char *old, const char *new) {
 
 6) Terdapat fungsi mkdir yangdigunakan untuk membuat folder yang diinginkan. kemudian aktifitas ini dicatat dalam log dengan fungsi createlog.
 
-```
+```sh
 
 static int xmp_mkdir(const char *path, mode_t mode) {
     printf("mkdir %s\n", path);
@@ -515,7 +515,7 @@ static int xmp_mkdir(const char *path, mode_t mode) {
 
 7) Terdapat fungsi rmdir untuk menghapus direktori, kemudian aktifitas ini dicatat dalam log dengan fungsi createlog
 
-```
+```sh
 
 static int xmp_rmdir(const char *path) {
     printf("rmdir %s\n", path);
@@ -554,7 +554,7 @@ Ketika diakses melalui filesystem hanya akan muncul Suatu_File.txt
 
 ## Code
 
-```
+```sh
 
 void rot13(char *name) {
     if (strcmp(name, ".") == 0 || strcmp(name, "..") == 0) return;
@@ -637,6 +637,96 @@ void check_encryption(char *path, const char *fpath) {
 }
 
 ```
+
+## Penjelasan Code
+
+1) Fungsi rot13 agar setiap direktori yang diwali “RX_[Nama]” akan terencode dengan algoritma tambahan ROT13 (Atbash + ROT13).
+
+```sh
+
+void rot13(char *name) {
+    if (strcmp(name, ".") == 0 || strcmp(name, "..") == 0) return;
+
+    int name_len = strlen(name);
+    for (int i = 0; i < name_len; ++i) {
+        if ('A' <= name[i] && name[i] <= 'M') {
+            name[i] = 13 + name[i];
+        } else if ('N' <= name[i] && name[i] <= 'Z') {
+            name[i] = -13 + name[i];
+        } else if ('a' <= name[i] && name[i] <= 'm') {
+            name[i] = 13 + name[i];
+        } else if ('n' <= name[i] && name[i] <= 'z') {
+            name[i] = -13 + name[i];
+        }
+    }
+
+    char *dot = strrchr(name, '.');
+    for (int i = (int)(dot - name); i < name_len; ++i) {
+        if ('A' <= name[i] && name[i] <= 'M') {
+            name[i] = 13 + name[i];
+        } else if ('N' <= name[i] && name[i] <= 'Z') {
+            name[i] = -13 + name[i];
+        } else if ('a' <= name[i] && name[i] <= 'm') {
+            name[i] = 13 + name[i];
+        } else if ('n' <= name[i] && name[i] <= 'z') {
+            name[i] = -13 + name[i];
+        }
+    }
+}
+
+```
+
+2) Fungsi vigenere_enc untuk mengenkripsi isi dari direktori yang direname dengan awalan “RX_[Nama]” menggunakan algoritma ambahan Vigenere Cipher dengan key “SISOP” (Case-sensitive, Atbash + Vigenere).
+
+```sh
+
+void vigenere_enc(char *name) {
+    char *key = "SISOP";
+
+    if (strcmp(name, ".") == 0 || strcmp(name, "..") == 0) return;
+
+    int n = 0;
+
+    char *dot = strrchr(name, '.');
+    for (int i = 0; i < (int)(dot - name); ++i) {
+        if ('A' <= name[i] && name[i] <= 'Z') {
+            name[i] = 65 + (name[i] + key[n] - 130) % 26;
+            n = (n + 1) % 5;
+        } else if ('a' <= name[i] && name[i] <= 'z') {
+            name[i] = 97 + (name[i] + key[n] - 162) % 26;
+            n = (n + 1) % 5;
+        }
+    }
+}
+
+```
+
+3) Fungsi vignere_dec untuk mendekripsi direktori yang direname menjadi tanpa “RX_”. Maka isi direktori akan terdecode
+
+```sh
+
+void vigenere_dec(char *name) {
+    char *key = "SISOP";
+
+    if (strcmp(name, ".") == 0 || strcmp(name, "..") == 0) return;
+
+    int n = 0;
+
+    char *dot = strrchr(name, '.');
+    for (int i = 0; i < (int)(dot - name); ++i) {
+        if ('A' <= name[i] && name[i] <= 'Z') {
+            name[i] = 65 + (name[i] - key[n] + 26) % 26;
+            n = (n + 1) % 5;
+        } else if ('a' <= name[i] && name[i] <= 'z') {
+            name[i] = 97 + (name[i] - key[n] - 6) % 26;
+            n = (n + 1) % 5;
+        }
+    }
+
+}
+
+```
+
 
 ## Soal 3
 
