@@ -352,7 +352,9 @@ void atbash(char *name) {
 
 ```
 
-2) Kemudian kami buat fungsi cek enkripsi untuk mengecek apakah direktori yang diinputkan terdapat nama AtoZ_ atau RX_. Jika terdapat nama RX_ maka fungsi enkripsi rot13 dan atbash akan diterapkan pada direktori tersebut namun jika terdapat nama AtoZ_ maka fungsi enkripsi atbash akan diterapkan pada direktori tersebut.
+2) Kemudian kami buat fungsi cek enkripsi untuk mengecek apakah direktori yang diinputkan terdapat nama AtoZ_ atau RX_.
+- Jika terdapat nama AtoZ_ maka fungsi enkripsi atbash akan diterapkan pada direktori tersebut.
+- Jika terdapat nama RX_ maka fungsi enkripsi rot13 dan atbash akan diterapkan pada direktori tersebut namun 
 
 ```
 
@@ -369,6 +371,35 @@ void check_encryption(char *path, const char *fpath) {
 
 ```
 
+3) Selain itu kami juga membuat fungsi getatt tujuannya untuk  menambahkan fungsi cek enkripsi serta mendapatkan atribut dari file yang diminta
+
+```
+
+static int xmp_getattr(const char *path, struct stat *st) {
+    char fpath[2000], name[1000], temp[1000];
+    sprintf(temp, "%s", path);
+
+    int name_len = strlen(path);
+    for (int i = 0; i < name_len; i++) {
+        name[i] = path[i + 1];
+    }
+    printf("getattr %s\n", name);
+    
+    // vigenere_dec(name);
+    // atbash(name);
+    // rot13(name);
+    check_encryption(temp, path);
+    sprintf(fpath, "%s/%s", dirpath, temp);
+    
+    int res = lstat(fpath, st);
+    if (res != 0){
+        return -ENOENT;
+    }
+
+    return 0;
+}
+
+```
 
 
 ## Soal 2
