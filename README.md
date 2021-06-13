@@ -12,11 +12,11 @@ Di suatu jurusan, terdapat admin lab baru yang super duper gabut, ia bernama Sin
 
 ```
 NOTE : 
-Semua file yang berada pada direktori **harus** ter-encode menggunakan Atbash cipher(mirror).
+Semua file yang berada pada direktori harus ter-encode menggunakan Atbash cipher(mirror).
 Misalkan terdapat file bernama kucinglucu123.jpg pada direktori DATA_PENTING
-**“AtoZ_folder/DATA_PENTING/kucinglucu123.jpg” → “AtoZ_folder/WZGZ_KVMGRMT/pfxrmtofxf123.jpg”**
-**Note :** filesystem berfungsi normal layaknya linux pada umumnya, Mount source (root) filesystem adalah directory /home/[USER]/Downloads, dalam penamaan file ‘/’ diabaikan, dan ekstensi tidak perlu di-encode.
-Referensi : [https://www.dcode.fr/atbash-cipher]
+“AtoZ_folder/DATA_PENTING/kucinglucu123.jpg” → “AtoZ_folder/WZGZ_KVMGRMT/pfxrmtofxf123.jpg”
+Note : filesystem berfungsi normal layaknya linux pada umumnya, Mount source (root) filesystem adalah directory /home/[USER]/Downloads, dalam penamaan file ‘/’ diabaikan, dan ekstensi tidak perlu di-encode.
+Referensi : https://www.dcode.fr/atbash-cipher
 ```
 
 a. Jika sebuah direktori dibuat dengan awalan “AtoZ_”, maka direktori tersebut akan menjadi direktori ter-encode.
