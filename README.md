@@ -460,6 +460,60 @@ static int xmp_readdir(const char *path, void *buf, fuse_fill_dir_t filler, off_
 
 ```
 
+5) Lalu kami membuat fungsi rename untuk merename folder sebelumnya menjadi nama folder yang diinginkan, menambahkan fungsi cek enkripsi yang didefinisikan sebelumnya untuk mengecek nama direktori yang akan dienkripsi dan nantinya fungsi ini akan menambahkan fungsi createlogrename untuk dicatat dalam log.
+
+```
+
+static int xmp_rename(const char *old, const char *new) {
+    char fpath[2000];
+    char name[1000];
+    char new_name[1000];
+    createlogrename(old, new);
+    if (strcmp(old, "/") == 0) {
+        sprintf(fpath, "%s", dirpath);
+    } else {
+        sprintf(name, "%s", old);
+        // vigenere_dec(name);
+        // atbash(name);
+        // rot13(name);
+        check_encryption(name, fpath);
+
+        memset(fpath, 0, sizeof(fpath));
+        memset(new_name, 0, sizeof(new_name));
+
+        sprintf(fpath, "%s/%s", dirpath, name);
+        sprintf(new_name, "%s/%s", dirpath, new);
+    }
+
+    printf("rename %s %s\n", fpath, new_name);
+
+    int res = rename(fpath, new_name);
+    if (res == -1) 
+        return -errno;
+
+    return 0;
+}
+
+```
+
+6) Terdapat fungsi mkdir yangdigunakan untuk membuat folder yang diinginkan. kemudian aktifitas ini dicatat dalam log dengan fungsi createlog.
+
+```
+
+static int xmp_mkdir(const char *path, mode_t mode) {
+    printf("mkdir %s\n", path);
+    createlog("mkdir", path);
+    char fpath[2000];
+    
+    sprintf(fpath, "%s/%s", dirpath, path);
+    mkdir(fpath, mode);
+
+    return 0;
+}
+
+```
+
+
 ## Soal 2
 
 Selain itu Sei mengusulkan untuk membuat metode enkripsi tambahan agar data pada komputer mereka semakin aman. Berikut rancangan metode enkripsi tambahan yang dirancang oleh Sei
