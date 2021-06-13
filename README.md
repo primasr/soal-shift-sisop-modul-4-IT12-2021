@@ -401,6 +401,64 @@ static int xmp_getattr(const char *path, struct stat *st) {
 
 ```
 
+4) Selanjutnya terdapat fungsi readdir untuk membaca direktori yang diminta selain itu juga menambahkan fungsi cek enkripsi yang didefinisikan sebelumnya untuk mengecek nama direktori yang akan dienkripsi.
+
+```
+
+static int xmp_readdir(const char *path, void *buf, fuse_fill_dir_t filler, off_t offset, struct fuse_file_info *fi) {
+    int res;
+    DIR *dp;
+    struct dirent *de;
+
+    (void) offset;
+    (void) fi;
+    char fpath[2000];
+    char name[1000];
+
+    if (strcmp(path, "/") == 0) {
+        sprintf(fpath, "%s", dirpath);
+    } 
+    else {
+        sprintf(name, "%s", path);
+        // vigenere_dec(name);
+        // atbash(name);
+        // rot13(name);
+        check_encryption(name, path);
+        sprintf(fpath, "%s/%s", dirpath, name);
+    }
+
+    printf("readdir: %s\n", fpath);
+
+    dp = opendir(fpath);
+    if (dp == NULL)
+        return -errno;
+
+    while ((de = readdir(dp)) != NULL) {
+        struct stat st;
+        memset(&st, 0, sizeof(st));
+        st.st_ino = de->d_ino;
+        st.st_mode = de->d_type << 12;
+
+        char fullpathname[2257];
+        sprintf(fullpathname, "%s/%s", fpath, de->d_name);
+        
+        char temp[1000];
+        strcpy(temp, de->d_name);
+        // vigenere_enc(temp);
+        // atbash(name);
+        // rot13(name);
+        check_encryption(temp, fpath);
+
+        res = (filler(buf, temp, &st, 0));
+        if (res != 0) break;
+    }
+
+    closedir(dp);
+
+    return 0;
+}
+
+```
 
 ## Soal 2
 
